@@ -20,13 +20,21 @@ jobs:
         echo "Building Docker image..."
         docker build -t nginx-devops-demo .
 
-    # 🧪 Test Container
     - name: Test Container
       run: |
         echo "Testing container..."
+    
         docker run -d -p 8080:80 --name test-container nginx-devops-demo
-        sleep 5
-        curl http://localhost:8080 | grep "Hello from Nginx"
+    
+        echo "Waiting for container to start..."
+        sleep 10
+    
+        echo "Checking response..."
+        curl -v http://localhost:8080
+    
+        echo "Validating content..."
+        curl http://localhost:8080 | grep "Hello"
+    
         docker rm -f test-container
 
     # 🚀 Deploy to EC2
